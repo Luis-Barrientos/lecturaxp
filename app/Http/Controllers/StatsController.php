@@ -35,7 +35,7 @@ class StatsController extends Controller
             -> select('book_id')
             -> selectRaw('SUM(pages_read) as pages_read_total')
             -> groupBy('book_id')
-            -> havingRaw('SUM(is_completed) = 0')
+            -> havingRaw('SUM(is_completed::int) = 0')
             -> get();    
 
         // Total de sesiones registradas
