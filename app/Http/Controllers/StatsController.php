@@ -22,7 +22,7 @@ class StatsController extends Controller
 
         // XP ganado por mes (últimos 6 meses)
         $xpByMonth = $user -> readingLogs()
-            -> selectRaw('DATE_FORMAT(date, "%Y-%m") as month, SUM(xp_earned) as total')
+            -> selectRaw('to_char(date, \'YYYY-MM\') as month, SUM(xp_earned) as total')
             -> where('date', '>=', Carbon::now()->subMonths(6))
             -> groupBy('month')
             -> orderBy('month')
@@ -54,7 +54,7 @@ class StatsController extends Controller
         // Páginas leídas por mes (ultimos 6 meses)
         // Agrupamos por mes y sumamos las páginas
         $pagesByMonth = $user -> readingLogs()
-        ->selectRaw('DATE_FORMAT(date, "%Y-%m") as month, SUM(pages_read) as total')
+        ->selectRaw('to_char(date, \'YYYY-MM\') as month, SUM(pages_read) as total')
         ->where('date', '>=', Carbon::now()->subMonths(6))
         ->groupBy('month')
         ->orderBy('month')
