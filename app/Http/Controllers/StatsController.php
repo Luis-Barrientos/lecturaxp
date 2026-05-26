@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ReadingLog;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class StatsController extends Controller
 {
@@ -62,15 +63,17 @@ class StatsController extends Controller
 
         // Comparativa: XP este mes vs mes pasado
         $thisMonthXP = $user->readingLogs()
-            ->whereMonth('date', now()->month)
+            ->whereRaw('EXTRACT(MONTH FROM date) = ?', [now()->month])
+            ->whereRaw('EXTRACT(YEAR FROM date) = ?', [now()->year])
             ->sum('xp_earned');
         $lastMonthXP = $user->readingLogs()
-            ->whereMonth('date', now()->month - 1)
+            ->whereRaw('EXTRACT(MONTH FROM date) = ?', [now()->subMonth()->month])
+            ->whereRaw('EXTRACT(YEAR FROM date) = ?', [now()->subMonth()->year])
             ->sum('xp_earned');
         $xpDiff = $lastMonthXP > 0 ? round((($thisMonthXP - $lastMonthXP) / $lastMonthXP) * 100) : 0;
 
         // Velocidad de lectura (págs/día promedio)
-        $totalDays = $user->readingLogs()->selectRaw('COUNT(DISTINCT DATE(date)) as days')->first()->days ?? 0;
+        $totalDays = $user->readingLogs()->selectRaw('COUNT(DISTINCT date::date) as days')->first()->days ?? 0;
         $avgPagesPerDay = $totalDays > 0 ? round($totalPages / $totalDays, 1) : 0;
 
         // Géneros favoritos
