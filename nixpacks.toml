@@ -1,7 +1,2 @@
-[phases.build]
-cmds = [
-    "composer install --no-dev --optimize-autoloader"
-]
-
 [start]
 cmd = "php artisan migrate --force && php artisan db:seed --force && frankenphp run --config /Caddyfile"
