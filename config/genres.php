@@ -1,0 +1,32 @@
+<?php
+return [
+    'list' => [
+        'Ficción literaria',
+        'Ciencia ficción',
+        'Fantasía',
+        'Misterio',
+        'Thriller / Suspense',
+        'Terror',
+        'Romance',
+        'Aventura',
+        'Ficción histórica',
+        'Juvenil',
+        'Infantil',
+        'Biografía',
+        'Historia',
+        'Ciencia',
+        'Tecnología',
+        'Psicología',
+        'Filosofía',
+        'Autoayuda',
+        'Economía',
+        'Política',
+        'Arte',
+        'Viajes',
+        'Cocina',
+        'Poesía',
+        'Cómics',
+        'Religión',
+        'Deporte',
+    ]
+];
