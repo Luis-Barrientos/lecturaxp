@@ -23,7 +23,7 @@ class StatsController extends Controller
 
         // XP ganado por mes (últimos 6 meses)
         $xpByMonth = $user -> readingLogs()
-            -> selectRaw('to_char(date, \'YYYY-MM\') as month, SUM(xp_earned) as total')
+            -> selectRaw('to_char("date", \'YYYY-MM\') as month, SUM(xp_earned) as total')
             -> where('date', '>=', Carbon::now()->subMonths(6))
             -> groupBy('month')
             -> orderBy('month')
@@ -55,7 +55,7 @@ class StatsController extends Controller
         // Páginas leídas por mes (ultimos 6 meses)
         // Agrupamos por mes y sumamos las páginas
         $pagesByMonth = $user -> readingLogs()
-        ->selectRaw('to_char(date, \'YYYY-MM\') as month, SUM(pages_read) as total')
+        ->selectRaw('to_char("date", \'YYYY-MM\') as month, SUM(pages_read) as total')
         ->where('date', '>=', Carbon::now()->subMonths(6))
         ->groupBy('month')
         ->orderBy('month')
@@ -63,17 +63,17 @@ class StatsController extends Controller
 
         // Comparativa: XP este mes vs mes pasado
         $thisMonthXP = $user->readingLogs()
-            ->whereRaw('EXTRACT(MONTH FROM date) = ?', [now()->month])
-            ->whereRaw('EXTRACT(YEAR FROM date) = ?', [now()->year])
+            ->whereRaw('EXTRACT(MONTH FROM "date") = ?', [now()->month])
+            ->whereRaw('EXTRACT(YEAR FROM "date") = ?', [now()->year])
             ->sum('xp_earned');
         $lastMonthXP = $user->readingLogs()
-            ->whereRaw('EXTRACT(MONTH FROM date) = ?', [now()->subMonth()->month])
-            ->whereRaw('EXTRACT(YEAR FROM date) = ?', [now()->subMonth()->year])
+            ->whereRaw('EXTRACT(MONTH FROM "date") = ?', [now()->subMonth()->month])
+            ->whereRaw('EXTRACT(YEAR FROM "date") = ?', [now()->subMonth()->year])
             ->sum('xp_earned');
         $xpDiff = $lastMonthXP > 0 ? round((($thisMonthXP - $lastMonthXP) / $lastMonthXP) * 100) : 0;
 
         // Velocidad de lectura (págs/día promedio)
-        $totalDays = $user->readingLogs()->selectRaw('COUNT(DISTINCT date::date) as days')->first()->days ?? 0;
+        $totalDays = $user->readingLogs()->selectRaw('COUNT(DISTINCT "date"::date) as days')->first()->days ?? 0;
         $avgPagesPerDay = $totalDays > 0 ? round($totalPages / $totalDays, 1) : 0;
 
         // Géneros favoritos
